@@ -89,7 +89,7 @@ class BinanceTrader:
                 time.sleep(60)
 
     def update_spreadsheet(self, action):
-        sa = gspread.service_account("C:\\Users\\tomer admin\\Downloads\\n-t-m-383613-c84a42ce9f0b.json")
+        sa = gspread.service_account("path to your gspread API")
         spreadsheet = sa.open('N_T_M_action')
         worksheet = spreadsheet.get_worksheet(0)
         cell_skip_down = 787
