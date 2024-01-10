@@ -6,11 +6,22 @@ from binance.enums import *
 
 
 class BinanceTrader:
+    """
+    BinanceTrader class for automated BTC trading on Binance.
+    """
     BUY_THRESHOLD = 0.997
     SELL_THRESHOLD = 1.003
     QUANTITY = '0.001'
 
     def __init__(self, api_key, secret_key, symbol='BTCEUR'):
+        """
+        Initialize BinanceTrader instance.
+
+        Parameters:
+        - api_key (str): Binance API key.
+        - secret_key (str): Binance API secret key.
+        - symbol (str): Trading pair symbol (default: 'BTCEUR').
+        """
         self.client = Client(api_key, secret_key)
         self.symbol = symbol
         self.ticker = None
@@ -21,6 +32,9 @@ class BinanceTrader:
         self.btc_balance = None
 
     def get_ticker_price(self):
+        """
+        Get the current ticker price for the specified symbol.
+        """
         try:
             self.ticker = self.client.get_symbol_ticker(symbol=self.symbol)
             self.price = float(self.ticker['price'])
@@ -29,6 +43,9 @@ class BinanceTrader:
             self.price = 0.0
 
     def get_btc_balance(self):
+        """
+        Get the current BTC balance in the Binance account.
+        """
         try:
             balance_info = self.client.get_asset_balance(asset='BTC')
             self.btc_balance = float(balance_info['free'])
@@ -37,6 +54,9 @@ class BinanceTrader:
             self.btc_balance = None
 
     def sell_btc(self):
+        """
+        Sell BTC based on predefined conditions.
+        """
         self.get_ticker_price()
         self.get_btc_balance()
         if self.btc_balance is not None and self.btc_balance >= float(self.QUANTITY):
@@ -54,6 +74,9 @@ class BinanceTrader:
             self.log_error('Not enough BTC to sell or unable to retrieve balance')
 
     def buy_btc(self):
+        """
+        Buy BTC based on predefined conditions.
+        """
         self.get_ticker_price()
         self.get_btc_balance()
         if self.eur_balance >= 25:
@@ -71,6 +94,9 @@ class BinanceTrader:
             self.log_error('Not enough EUR for the order')
 
     def watch_btc_price(self):
+        """
+        Continuously monitor BTC price and execute trades as per conditions.
+        """
         while True:
             try:
                 self.get_ticker_price()
@@ -89,6 +115,12 @@ class BinanceTrader:
                 time.sleep(60)
 
     def update_spreadsheet(self, action):
+        """
+        Update Google Spreadsheet with trading details.
+
+        Parameters:
+        - action (str): Type of action performed ('buy_btc' or 'sell_btc').
+        """
         sa = gspread.service_account("path to your gspread API")
         spreadsheet = sa.open('N_T_M_action')
         worksheet = spreadsheet.get_worksheet(0)
@@ -109,16 +141,26 @@ class BinanceTrader:
         cell_skip_right += 1
 
     def update_prices(self):
+        """
+        Update buy and sell prices based on the defined thresholds.
+        """
         self.buy_price = self.BUY_THRESHOLD * self.price
         self.sell_price = self.SELL_THRESHOLD * self.price
 
     def log_error(self, message):
+        """
+        Log error messages with timestamp.
+
+        Parameters:
+        - message (str): Error message to be logged.
+        """
         current_time = datetime.datetime.now()
         print(f'Error at {current_time}: {message}')
         # Consider logging to a file or taking appropriate actions
 
 
 if __name__ == "__main__":
+    # Example usage
     trader = BinanceTrader(api_key='your_api_key',
                            secret_key='your_secret_key')
     trader.watch_btc_price()
