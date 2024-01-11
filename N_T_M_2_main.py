@@ -124,7 +124,7 @@ class BinanceTrader:
         sa = gspread.service_account("path to your gspread API")
         spreadsheet = sa.open('N_T_M_action')
         worksheet = spreadsheet.get_worksheet(0)
-        cell_skip_down = 787
+        cell_skip_down = 0 # Edit this sentence if you rerun the code to prevent it from overwriting your previous records.
         cell_skip_right = 1
         current_time = datetime.datetime.now()
         current_time_str = current_time.strftime("%m/%d/%Y %H:%M:%S")
