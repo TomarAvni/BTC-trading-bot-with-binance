@@ -21,7 +21,7 @@ Set up your Binance API keys.
 
 Obtain API key and secret from Binance.
 Replace the placeholder API key and secret in the script with your actual credentials.
-Set up Google Sheets API credentials.
+Set up Google Sheets API credentials and make shure they work, open a Google Sheets new tab or file and give the API keys you got a premotion to edit the file. 
 
 Download the JSON key file for your service account from the Google Cloud Console.
 Replace the placeholder JSON key file path in the script with the path to your key file.
